@@ -1,0 +1,191 @@
+[
+    {
+        "id": "ea36d590358b0f52",
+        "type": "inject",
+        "z": "4f7f559cbce931c2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.01",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "40d088388db6426e"
+            ]
+        ]
+    },
+    {
+        "id": "5be3dd7e2fa9748a",
+        "type": "function",
+        "z": "4f7f559cbce931c2",
+        "name": "",
+        "func": "if(msg.payload == 65530){\n    msg.reset = 1;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 400,
+        "wires": [
+            [
+                "40d088388db6426e"
+            ]
+        ]
+    },
+    {
+        "id": "8d954e6943040ca7",
+        "type": "delay",
+        "z": "4f7f559cbce931c2",
+        "name": "Retraso entre lecturas",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "2",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 500,
+        "y": 320,
+        "wires": [
+            [
+                "5be3dd7e2fa9748a",
+                "7ba7685461db1a14",
+                "38b36820635b79c0"
+            ]
+        ]
+    },
+    {
+        "id": "40d088388db6426e",
+        "type": "counter",
+        "z": "4f7f559cbce931c2",
+        "name": "",
+        "init": "0",
+        "step": "1",
+        "lower": null,
+        "upper": null,
+        "mode": "increment",
+        "outputs": 2,
+        "x": 300,
+        "y": 340,
+        "wires": [
+            [
+                "8d954e6943040ca7"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7ba7685461db1a14",
+        "type": "debug",
+        "z": "4f7f559cbce931c2",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8e2444f06f40ec30",
+        "type": "modbus-flex-write",
+        "z": "4f7f559cbce931c2",
+        "name": "Localhost",
+        "showStatusActivities": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "server": "da9ee9185b9e2975",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 920,
+        "y": 320,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "38b36820635b79c0",
+        "type": "function",
+        "z": "4f7f559cbce931c2",
+        "name": "ZW C02",
+        "func": "msg.payload = { \n    value: msg.payload, \n    'fc': 6,\n    'unitid': 1,\n    'address': 0,\n    'quantity': 1 } \n    flow.set(\"C01\", msg.payload.value);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 320,
+        "wires": [
+            [
+                "8e2444f06f40ec30"
+            ]
+        ]
+    },
+    {
+        "id": "283c10e92bd7960f",
+        "type": "comment",
+        "z": "4f7f559cbce931c2",
+        "name": "Cycle counter 0-65530, 2 seconds per message",
+        "info": "",
+        "x": 540,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "da9ee9185b9e2975",
+        "type": "modbus-client",
+        "name": "Localhost",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.78.243",
+        "tcpPort": "10502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    }
+]
